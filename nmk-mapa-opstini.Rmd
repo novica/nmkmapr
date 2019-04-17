@@ -1,0 +1,142 @@
+---
+title: "Северна Македонија по општини"
+output:
+  html_document:
+    df_print: paged
+    fig_cap: yes
+    toc: yes
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+# set global chunk options
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE)
+```
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(viridis))
+suppressPackageStartupMessages(library(ggrepel))
+```
+
+```{r, eval = TRUE}
+#get spatial data for North Macedonia from GADM (but this doesn't need to be run every time)
+#suppressPackageStartupMessages(library(rgdal))
+#MKD.adm1.spdf <- 
+#  getData(
+#    "GADM"
+#    , country = "Macedonia"
+#    , level = 1
+#  )
+#save(MKD.adm1.spdf, file = "MKD.adm1.spdf.RData.RData")
+```
+
+```{r}
+cleaner_upper <- function(x) {
+  y <- case_when(
+    x == "Арациново"            ~ "Арачиново",
+    x == "Скопйе"               ~ "Скопје",
+    x == "Боговинйе"            ~ "Боговиње",
+    x == "Центар жупа"          ~ "Центар Жупа",
+    x == "Демир Капийа"         ~ "Демир Капија",
+    x == "Гевгелийа"            ~ "Гевгелија",
+    x == "Йегуновтсе"           ~ "Јегуновце",
+    x == "Кавадартси"           ~ "Кавадарци",
+    x == "Лаке Охрид"           ~ "Охридско езеро",
+    x == "Маврово анд Ростуша"  ~ "Маврово и Ростуша",
+    x == "Новатси"              ~ "Новаци",
+    x == "Осломей"              ~ "Осломеј",
+    x == "Сарай"                ~ "Сарај",
+    x == "Стар Дойран"          ~ "Дојран",
+    x == "Струмитса"            ~ "Струмица",
+    x == "Виница"               ~ "Виница",
+    x == "Зайас"                ~ "Зајас",
+    TRUE ~ x
+    )
+  return(y)
+}
+# cleaner_upper("Хром")
+# cleaner_upper("Арациново")
+```
+
+
+```{r, eval=TRUE}
+# Read in administrative area level data
+mkop <- get(load("MKD.adm1.spdf.RData"))
+
+mkop.df <- fortify(mkop, region = "NAME_1")
+
+#convert to cyrillic
+mkop.cyr.df <- mkop.df %>%
+  mutate(idmk=stringi::stri_trans_general(id, 'cyrillic')) %>% 
+  mutate(idmk=cleaner_upper(idmk))
+
+#save(mkop.cyr.df, file = "mkop.cyr.df.csv")
+
+#in case you want Skopje grouped as one area
+skopski_opstini <- c("Сарај", "Ѓорче Петров", "Карпош", "Шуто Оризари", "Бутел", "Чаир", "Центар", "Гази Баба", "Аеродром", "Кисела Вода" )
+
+mkop.sk.cyr.df <- mkop.cyr.df %>%
+  mutate(idmksk=ifelse(idmk %in% skopski_opstini, "Скопје", idmk))
+  
+#save(mkop.sk.cyr.df, file = "mkop-sk.cyr.df.csv")
+
+#make the centroids
+mkop.centroids.df <- tibble(
+  long = coordinates(mkop)[, 1], 
+  lat = coordinates(mkop)[, 2],
+  num = mkop@data[,'ID_1'],
+  id = mkop@data[,'NAME_1']
+  ) 
+
+#convert centroids to cyrillic too
+mkop.centroids.cyr.df <- mkop.centroids.df %>%
+  mutate(idmk=stringi::stri_trans_general(id, 'cyrillic')) %>% 
+  mutate(idmk=cleaner_upper(idmk))
+
+#save(mkop.centroids.cyr.df, file = "mkop.centroids.cyr.df")
+
+#skopje
+mkop.sk.centroids.cyr.df <- mkop.centroids.cyr.df %>%
+  mutate(idmksk=ifelse(idmk %in% skopski_opstini, "Скопје", idmk))
+  
+#save(mkop.sk.centroids.cyr.df, file = "mkop.sk.centroids.cyr.df.csv")
+
+```
+
+
+## Мапа
+
+```{r, eval=TRUE, fig.width=10, fig.height=10}
+map_plot <-
+  ggplot(mkop.cyr.df, aes(x = long, y = lat, group = group)) +
+  geom_line(size = 0.2, colour = "grey15") +
+  geom_polygon(colour = "grey15",
+               size = .1,
+               fill = "grey95") + #, aes(fill = factor(number))) +
+  geom_label_repel(
+    data = mkop.centroids.cyr.df,
+    size = 3,
+    min.segment.length = unit(.5, 'cm'),
+    aes(
+      label = idmk,
+      x = long,
+      y = lat,
+      group = idmk
+    )
+  ) +
+  scale_fill_viridis(
+    'Мапа на општини',
+    na.value = "white",
+    discrete = TRUE,
+    option = "magma",
+    direction = -1
+  ) +
+  coord_map() +
+  labs(title = "Мапа на општини", x = "", y = "") +
+  theme_void() +
+  theme(legend.position = 'top') 
+
+map_plot
+```
