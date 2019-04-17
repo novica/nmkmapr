@@ -5,4 +5,4 @@ Following [this explanation](https://stackoverflow.com/questions/17723822/admini
 
 The latest data are from [6 May 2018](https://gadm.org/data.html) and I'm not sure if they correctly represent the current municipalities in North Macedonia. If there are any mistakes, report them here.
 
-![map](novica/nmkmapr/blob/master/map.png?raw=true "map")
+![map](map.png?raw=true "map")
