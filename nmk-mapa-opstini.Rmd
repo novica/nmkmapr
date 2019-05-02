@@ -73,7 +73,7 @@ mkop.cyr.df <- mkop.df %>%
   mutate(idmk=stringi::stri_trans_general(id, 'cyrillic')) %>% 
   mutate(idmk=cleaner_upper(idmk))
 
-#save(mkop.cyr.df, file = "mkop.cyr.df.csv")
+#write.csv(mkop.cyr.df, file = "mkop.cyr.df.csv")
 
 #in case you want Skopje grouped as one area
 skopski_opstini <- c("Сарај", "Ѓорче Петров", "Карпош", "Шуто Оризари", "Бутел", "Чаир", "Центар", "Гази Баба", "Аеродром", "Кисела Вода" )
@@ -81,7 +81,7 @@ skopski_opstini <- c("Сарај", "Ѓорче Петров", "Карпош", "�
 mkop.sk.cyr.df <- mkop.cyr.df %>%
   mutate(idmksk=ifelse(idmk %in% skopski_opstini, "Скопје", idmk))
   
-#save(mkop.sk.cyr.df, file = "mkop-sk.cyr.df.csv")
+#write.csv(mkop.sk.cyr.df, file = "mkop-sk.cyr.df.csv")
 
 #make the centroids
 mkop.centroids.df <- tibble(
@@ -96,13 +96,13 @@ mkop.centroids.cyr.df <- mkop.centroids.df %>%
   mutate(idmk=stringi::stri_trans_general(id, 'cyrillic')) %>% 
   mutate(idmk=cleaner_upper(idmk))
 
-#save(mkop.centroids.cyr.df, file = "mkop.centroids.cyr.df")
+#write.csv(mkop.centroids.cyr.df, file = "mkop.centroids.cyr.df.csv")
 
 #skopje
 mkop.sk.centroids.cyr.df <- mkop.centroids.cyr.df %>%
   mutate(idmksk=ifelse(idmk %in% skopski_opstini, "Скопје", idmk))
   
-#save(mkop.sk.centroids.cyr.df, file = "mkop.sk.centroids.cyr.df.csv")
+#write.csv(mkop.sk.centroids.cyr.df, file = "mkop.sk.centroids.cyr.df.csv")
 
 ```
 
