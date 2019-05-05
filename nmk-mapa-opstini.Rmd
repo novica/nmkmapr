@@ -18,11 +18,11 @@ knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE)
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(viridis))
 suppressPackageStartupMessages(library(ggrepel))
+suppressPackageStartupMessages(library(rgdal))
 ```
 
 ```{r, eval = TRUE}
 #get spatial data for North Macedonia from GADM (but this doesn't need to be run every time)
-#suppressPackageStartupMessages(library(rgdal))
 #MKD.adm1.spdf <- 
 #  getData(
 #    "GADM"
