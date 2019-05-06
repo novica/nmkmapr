@@ -23,6 +23,7 @@ suppressPackageStartupMessages(library(rgdal))
 
 ```{r, eval = TRUE}
 #get spatial data for North Macedonia from GADM (but this doesn't need to be run every time)
+#suppressPackageStartupMessages(library(raster))
 #MKD.adm1.spdf <- 
 #  getData(
 #    "GADM"
