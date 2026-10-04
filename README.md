@@ -1,6 +1,6 @@
 # nmkmapr
 
-App: https://01a1078a-e0cc-4066-bc89-edf7056373fa.share.connect.posit.cloud/
+App: https://novica-nmkmappr.share.connect.posit.cloud
 
 Code to generate an empty map of municipalities (plus the Ohrid lake) in North Macedonia to be used for plotting in R.
 
