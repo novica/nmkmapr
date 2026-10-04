@@ -1,4 +1,7 @@
 # nmkmapr
+
+App: https://01a1078a-e0cc-4066-bc89-edf7056373fa.share.connect.posit.cloud/
+
 Code to generate an empty map of municipalities (plus the Ohrid lake) in North Macedonia to be used for plotting in R.
 
 Following [this explanation](https://stackoverflow.com/questions/17723822/administrative-regions-map-of-a-country-with-ggmap-and-ggplot2) the Rmd creates dataframes to be used for mapping data to municipalities in North Macedonia.
